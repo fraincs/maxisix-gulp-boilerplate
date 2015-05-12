@@ -8,12 +8,13 @@ var gulp = require('gulp'),
     notify = require('gulp-notify'),
     plumber = require('gulp-plumber'),
 
-
     /* STYLES DEPENDENCIES */
+    postcss = require('gulp-postcss'),
     stylus = require('gulp-stylus'),
     sourcemaps = require('gulp-sourcemaps'),
     rupture = require('rupture'),
-    autoprefixer = require('gulp-autoprefixer'),
+    lost = require('lost'),
+    autoprefixer = require('autoprefixer'),
     cmq = require('gulp-combine-media-queries'),
 
 
@@ -45,7 +46,7 @@ FILE DESTINATIONS (RELATIVE TO ASSSETS FOLDER)
 
 var root_paths = {
 
-    assets : './assets/'
+    assets : './assets/',
     src : './src/'
 
 };
@@ -99,14 +100,14 @@ gulp.task('styles', function() {
     return gulp.src(target.main_stylus_src)
         .pipe(plumber())
         .pipe(stylus({
-            sourcemap: {
-                inline: true,
-                sourceRoot: '',
-                basePath: 'css'
-            },
-            use:[rupture()],
+            use:[rupture()]
         }))
-        .pipe(autoprefixer(AUTOPREFIXER_BROWSERS))
+        .pipe(sourcemaps.init())
+        .pipe(postcss([
+          lost(),
+          autoprefixer()
+        ]))
+        .pipe(sourcemaps.write('./'))
         .pipe(cmq({
             log: true
         }))

@@ -1,16 +1,16 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<meta charset="utf-8">
+    <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>Hello GulpJS</title>
+    <title>Hello GulpJS + PostCSS</title>
 
     <meta name="description" content="">
-	<meta name="keywords" content=""/>
+    <meta name="keywords" content=""/>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-	<link rel="shortcut icon" href="/images/favicon.ico" type="image/x-icon">
+    <!-- FAVICONS -->
 
-	<!-- FACEBOOK OPEN GRAPH -->
+    <!-- FACEBOOK OPEN GRAPH -->
     <meta property="og:title" content=""/>
     <meta property="og:image" content=""/>
     <meta property="og:description" content="" />
@@ -19,7 +19,7 @@
     <meta property="og:site_name" content=""/>
     <meta property="fb:admins" content=""/>
 
-    
+
     <!-- TWITTER OPEN GRAPH -->
     <meta name="twitter:title" content="" />
     <meta name="twitter:url" content="" />
@@ -30,8 +30,9 @@
 
 
 
-	<link rel="stylesheet" type="text/css" href="assets/css/styles.css">
-	<script src="//cdnjs.cloudflare.com/ajax/libs/modernizr/2.7.1/modernizr.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="assets/css/styles.css">
+    <!-- <script src="//cdnjs.cloudflare.com/ajax/libs/modernizr/2.7.1/modernizr.min.js"></script> -->
+    <script src="assets/js/min/scripts.min.js"></script>
 
 </head>
 <body>
@@ -42,81 +43,22 @@
         </a>
     </header>
 
-    <!-- Blocks -->
-    <section class="container">
-        <div class="row">
-            <figure>1</figure>
-            <figure>2</figure>
-            <figure>3</figure>
-            <figure>4</figure>
-            <figure>5</figure>
-            <figure>6</figure>
-        </div>
-    </section>
+    <pre>
+    section { lost-utility: clearfix; }
+    div { lost-column: 1/3; }
+    </pre>
 
-    <!-- Offset -->
-    <section class="container">
-        <div class="row">
-            <figure>1</figure>
-            <figure>2</figure>
-        </div>
-    </section>
-
-    <!-- Nesting -->
-    <section class="container">
-        <div class="row">
-        <figure>
-          <div class="row">
-            <figure>1</figure>
-            <figure>2</figure>
-        </div>
-        </figure>
-        <figure>1</figure>
-        <figure>2</figure>
-        </div>
-    </section>
-
-        <!-- Source Ordering -->
-    <section class="container">
-        <div class="row">
-        <figure>1</figure>
-        <figure>2</figure>
-        </div>
-     </section>
-
-        <!-- Alignment -->
-    <section class="container">
-        <figure>1</figure>
-    </section>
-
-        <!-- Clear/Unclear -->
-    <section class="container">
-        <div class="row">
-            <figure>
-              1 - Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dolorem rem nam dolore repellendus provident, voluptas necessitatibus vel cupiditate delectus, doloremque incidunt accusantium quia! Nisi molestiae totam natus, in assumenda accusantium.
-            </figure>
-            <figure>
-              2 - Lorem ipsum dolor sit amet.
-            </figure>
-            <figure>
-              3 - Lorem ipsum dolor sit amet, consectetur adipisicing elit. At sunt harum ut rerum id quae voluptas velit iusto quasi distinctio.
-            </figure>
-            <figure>
-              4 - Lorem ipsum dolor sit amet, consectetur adipisicing elit. Similique, sequi?
-            </figure>
-            <figure>
-              5 - Lorem ipsum dolor sit amet, consectetur adipisicing elit. Maxime nisi deserunt, dolorem accusamus sint ipsam dolor quae ab animi assumenda architecto placeat possimus fugit doloribus vel, corporis amet aliquam maiores!
-            </figure>
-            <figure>
-              6 - Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-            </figure>
-        </div>
+    <section>
+        <div>1</div>
+        <div>2</div>
+        <div>3</div>
+        <div>4</div>
+        <div>5</div>
     </section>
 
 
 
-	<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.11.0/jquery.js"></script>
-	<script src="assets/js/scripts.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.11.0/jquery.js"></script>
 
 </body>
 </html>

@@ -7,6 +7,15 @@ DEPENDENCIES
 var gulp = require('gulp'),
     notify = require('gulp-notify'),
     plumber = require('gulp-plumber'),
+    browserSync = require('browser-sync'),
+    reload  = browserSync.reload,
+
+    psi = require('psi'),
+    site = 'http://frontend.dev/',
+    siteStage = 'frontend.stage.hff.io',
+    key = '', // pagespeed key if used a lot better
+
+
 
     /* STYLES DEPENDENCIES */
     postcss = require('gulp-postcss'),
@@ -15,7 +24,12 @@ var gulp = require('gulp'),
     rupture = require('rupture'),
     lost = require('lost'),
     autoprefixer = require('autoprefixer'),
+    zIndex = require('postcss-zindex'),
+    postcssFocus = require('postcss-focus'),
+    postcssSize = require('postcss-size'),
+    postcssBrandColors = require('postcss-brand-colors'),
     cmq = require('gulp-combine-media-queries'),
+
 
 
     /* JS DEPENDENCIES */
@@ -23,20 +37,24 @@ var gulp = require('gulp'),
     concat = require('gulp-concat'),
     uglify = require('gulp-uglify'),
     stylish = require('jshint-stylish'),
+    stripDebug = require('gulp-strip-debug'),
 
 
     /* IMAGES MINIFICATION DEPENDENCIES */
-    imagemin = require('gulp-imagemin'),
-    pngquant = require('imagemin-pngquant'),
+    imageOptim = require('gulp-imageoptim'),
+
 
 
     /* SVG SPRITES DEPENDENCIES */
     svgstore = require('gulp-svgstore'),
     svgmin = require('gulp-svgmin'),
     rename = require('gulp-rename'),
-    cheerio = require('gulp-cheerio');
+    cheerio = require('gulp-cheerio'),
 
 
+    /* COOL TOOLS */
+    Pageres = require('pageres'),
+    styleGuide = require('postcss-style-guide');
 
 
 
@@ -60,11 +78,11 @@ var target = {
     js_src : root_paths.src + 'js/*.js',                            // all js files
     js_dest : root_paths.assets + 'js/min',                         // where to put minified js
 
-    img_src : root_paths.assets + 'images/*.{png,jpg,gif,svg}',       // all img files
-    img_dest : root_paths.assets + 'images/min',                     // where to put minified img
+    img_src : root_paths.src + 'images/**/*.{png,jpg,gif}',       // all img files
+    img_dest : root_paths.assets + 'images',                     // where to put minified img
 
-    svg_src : root_paths.assets + 'images/svg/*.svg',
-    svg_dest : root_paths.assets
+    svg_src : root_paths.src + 'images/svg/*.svg',
+    svg_dest : root_paths.assets + 'images/svg/svg-sprites/'
 
 };
 
@@ -77,18 +95,9 @@ AUTOPREFIXER CONFIG
 *******************************************************************************/
 
 var AUTOPREFIXER_BROWSERS = [
-    'ie >= 9',
-    'ie_mob >= 10',
-    'ff >= 30',
-    'chrome >= 34',
-    'safari >= 7',
-    'opera >= 23',
-    'ios >= 7',
-    'android >= 4.4',
-    'bb >= 10'
+    'last 2 versions',
+    'ie >= 9'
 ];
-
-
 
 
 
@@ -105,13 +114,19 @@ gulp.task('styles', function() {
         .pipe(sourcemaps.init())
         .pipe(postcss([
           lost(),
-          autoprefixer()
+          autoprefixer(),
+          zIndex(),
+          postcssFocus(),
+          postcssSize(),
+          postcssBrandColors(),
+          styleGuide()
         ]))
         .pipe(sourcemaps.write('./'))
         .pipe(cmq({
             log: true
         }))
         .pipe(gulp.dest(target.css_dest))
+        .pipe(reload({stream:true}))
         .pipe(notify('Styles task completed'));
 });
 
@@ -135,6 +150,20 @@ gulp.task('scripts', function() {
 });
 
 
+gulp.task('scriptsprod', function() {
+    return gulp.src(target.js_src)
+        .pipe(plumber())
+        .pipe(jshint())
+        .pipe(jshint.reporter(stylish))
+        .pipe(concat('scripts.min.js'))
+        .pipe(uglify())
+        .pipe(stripDebug())
+        .pipe(gulp.dest(target.js_dest))
+        .pipe(notify('Scripts task completed'));
+});
+
+
+
 
 
 
@@ -145,11 +174,7 @@ IMAGES TASK
 gulp.task('images', function() {
     return gulp.src(target.img_src)
         .pipe(plumber())
-        .pipe(imagemin({
-            progressive: true,
-            svgoPlugins: [{removeViewBox: false}],
-            use: [pngquant()]
-        }))
+        .pipe(imageOptim.optimize())
         .pipe(gulp.dest(target.img_dest));
 });
 
@@ -177,6 +202,59 @@ gulp.task('svgstore', function() {
 
 
 /*******************************************************************************
+PERFORMANCE TASK
+*******************************************************************************/
+
+// Please feel free to use the `nokey` option to try out PageSpeed
+// Insights as part of your build process. For more frequent use, 
+// we recommend registering for your own API key. For more info:
+// https://developers.google.com/speed/docs/insights/v1/getting_started
+
+gulp.task('mobile', function () {
+    return psi(siteStage, {
+        // key: key
+        nokey: 'true',
+        strategy: 'mobile',
+    }, function (err, data) {
+        console.log(data.score);
+        console.log(data.pageStats);
+    });
+});
+
+gulp.task('desktop', function () {
+    return psi(siteStage, {
+        nokey: 'true',
+        // key: key,
+        strategy: 'desktop',
+    }, function (err, data) {
+        console.log(data.score);
+        console.log(data.pageStats);
+    });
+});
+
+
+
+/*******************************************************************************
+COOL TASKS
+*******************************************************************************/
+
+gulp.task('shoot', function () {
+
+    var pageres = new Pageres({delay: 2})
+        .src(site, ['iphone 5s', 'Nexus 5'], {filename:'<%= date %> - <%= size %>'})
+        .dest('./pageres');
+
+    pageres.run(function (err) {
+        if (err) {
+            throw err;
+        }
+
+        console.log('Shooting terminé!');
+    });
+});
+
+
+/*******************************************************************************
 DEFAULT TASK
 *******************************************************************************/
 
@@ -185,6 +263,13 @@ gulp.task('default', ['styles','scripts','images'], function() {
 });
 
 
+gulp.task('browser-sync', function() {
+    browserSync({
+        proxy: site ,
+        tunnel: false, // mettre a true si on veut un url accessible de l'extérieur
+        browser: ["google chrome"]
+    });
+});
 
 
 
@@ -192,7 +277,7 @@ gulp.task('default', ['styles','scripts','images'], function() {
 WATCH TASK
 *******************************************************************************/
 
-gulp.task('watch', function() {
+gulp.task('watch', ['browser-sync'], function() {
 
     gulp.watch(target.stylus_src, ['styles']);       // Watch .styl files
     gulp.watch(target.img_src, ['images']);         // Watch images files

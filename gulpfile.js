@@ -10,6 +10,7 @@ var gulp = require('gulp'),
     browserSync = require('browser-sync'),
     reload  = browserSync.reload,
 
+    /* PERFORMANCE */
     psi = require('psi'),
     site = 'http://frontend.dev/',
     siteStage = 'frontend.stage.hff.io',
@@ -54,7 +55,6 @@ var gulp = require('gulp'),
 
     /* COOL TOOLS */
     Pageres = require('pageres'),
-    styleGuide = require('postcss-style-guide');
 
 
 
@@ -99,7 +99,9 @@ var AUTOPREFIXER_BROWSERS = [
     'ie >= 9'
 ];
 
-
+var options = {
+    name: "Project name"
+};
 
 /*******************************************************************************
 STYLUS TASK
@@ -113,13 +115,13 @@ gulp.task('styles', function() {
         }))
         .pipe(sourcemaps.init())
         .pipe(postcss([
+          styleGuide({options}),
           lost(),
           autoprefixer(),
           zIndex(),
           postcssFocus(),
           postcssSize(),
-          postcssBrandColors(),
-          styleGuide()
+          postcssBrandColors()
         ]))
         .pipe(sourcemaps.write('./'))
         .pipe(cmq({
@@ -150,6 +152,7 @@ gulp.task('scripts', function() {
 });
 
 
+// redundancy here maybe change this thing
 gulp.task('scriptsprod', function() {
     return gulp.src(target.js_src)
         .pipe(plumber())

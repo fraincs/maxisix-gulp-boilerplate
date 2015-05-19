@@ -236,33 +236,33 @@ th {
 
 /* MODULE */
 
-.btn-blue {
-	background-color: #e53238;
+div {
+	background-color: #55acee;
 	color: #fff;
 	width: calc(99.99% * 1/4 - (30px - 30px * 1/4));
 }
 
-.btn-blue:nth-child(n) {
+div:nth-child(n) {
 	float: left;
 	margin-right: 30px;
 	clear: none;
 }
 
-.btn-blue:last-child {
+div:last-child {
 	margin-right: 0;
 }
 
-.btn-blue:nth-child(4n) {
+div:nth-child(4n) {
 	margin-right: 0;
 }
 
-.btn-blue:nth-child(4n + 1) {
+div:nth-child(4n + 1) {
 	clear: left;
 }
 
 div:hover,
 div:focus {
-	background-color: #55acee;
+	background-color: #3b5998;
 }
 
 section {
@@ -281,6 +281,10 @@ section:after {
 	clear: both;
 }
 
+h2 {
+	font-size: 12rem;
+}
+
 /* STATE */
 
 /* THEME */
@@ -289,7 +293,7 @@ section:after {
 
 @media only screen and (min-width: 800px) {
 
-.btn-blue {
+div {
 	background-color: #e53238;
 }
 

@@ -35,6 +35,13 @@ var gulp = require('gulp'),
     postcssSize = require('postcss-size'),
     postcssBrandColors = require('postcss-brand-colors'),
     cmq = require('gulp-combine-media-queries'),
+    postcssEasings = require('postcss-easings'),
+
+    bemLinter = require('postcss-bem-linter'),
+    logWarnings = require('postcss-log-warnings'),
+
+    palette = require('postcss-color-palette'),
+    // a better palette mrmrs(http://clrs.cc/) is used by default, you can use FlatUI or Material
 
 
 
@@ -109,27 +116,31 @@ STYLUS TASK
 *******************************************************************************/
 
 gulp.task('styles', function() {
+        var processors = [
+              lost(),
+              autoprefixer(AUTOPREFIXER_BROWSERS),
+              palette(),
+              zIndex(),
+              postcssFocus(),
+              postcssSize(),
+              postcssEasings(),
+              postcssBrandColors()
+        ];
+
     return gulp.src(target.main_stylus_src)
         .pipe(plumber())
         .pipe(sourcemaps.init())
         .pipe(stylus({
             use:[rupture()]
         }))
-        .pipe(postcss([
-          lost(),
-          autoprefixer(),
-          zIndex(),
-          postcssFocus(),
-          postcssSize(),
-          postcssBrandColors()
-        ]))
-        .pipe(sourcemaps.write())
+        .pipe(postcss(processors))
         .pipe(cmq({
             log: true
         }))
+        .pipe(sourcemaps.write('./'))
         .pipe(gulp.dest(target.css_dest))
         .pipe(reload({stream:true}))
-        .pipe(notify('Styles task completed'));
+        .pipe(notify('POSTCSS task completed'));
 });
 
 

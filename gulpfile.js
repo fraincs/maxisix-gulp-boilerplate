@@ -17,6 +17,11 @@ var gulp = require('gulp'),
     key = '', // pagespeed key if used a lot better
 
 
+    /* ANALYSIS */
+    //listSelectorsPlugin = require('list-selectors'),
+    //cssstats = require('postcss-cssstats'),
+
+
 
     /* STYLES DEPENDENCIES */
     postcss = require('gulp-postcss'),
@@ -54,7 +59,7 @@ var gulp = require('gulp'),
 
 
     /* COOL TOOLS */
-    Pageres = require('pageres'),
+    Pageres = require('pageres');
 
 
 
@@ -99,10 +104,6 @@ var AUTOPREFIXER_BROWSERS = [
     'ie >= 9'
 ];
 
-var options = {
-    name: "Project name"
-};
-
 /*******************************************************************************
 STYLUS TASK
 *******************************************************************************/
@@ -115,7 +116,6 @@ gulp.task('styles', function() {
         }))
         .pipe(sourcemaps.init())
         .pipe(postcss([
-          styleGuide({options}),
           lost(),
           autoprefixer(),
           zIndex(),
@@ -202,6 +202,13 @@ gulp.task('svgstore', function() {
 
 
 
+
+
+/*******************************************************************************
+ANALYSIS TASK
+*******************************************************************************/
+
+//@todo
 
 
 /*******************************************************************************

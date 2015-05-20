@@ -28,6 +28,7 @@ var gulp = require('gulp'),
     stylus = require('gulp-stylus'),
     sourcemaps = require('gulp-sourcemaps'),
     rupture = require('rupture'),
+    typographic = require('typographic'),
     lost = require('lost'),
     autoprefixer = require('autoprefixer'),
     zIndex = require('postcss-zindex'),
@@ -40,7 +41,7 @@ var gulp = require('gulp'),
     bemLinter = require('postcss-bem-linter'),
     logWarnings = require('postcss-log-warnings'),
 
-    palette = require('postcss-color-palette'),
+    postcssPalette = require('postcss-color-palette'),
     // a better palette mrmrs(http://clrs.cc/) is used by default, you can use FlatUI or Material
 
 
@@ -111,6 +112,10 @@ var AUTOPREFIXER_BROWSERS = [
     'ie >= 9'
 ];
 
+var PALETTECOLOR = [
+    'material'
+];
+
 /*******************************************************************************
 STYLUS TASK
 *******************************************************************************/
@@ -119,19 +124,22 @@ gulp.task('styles', function() {
         var processors = [
               lost(),
               autoprefixer(AUTOPREFIXER_BROWSERS),
-              palette(),
               zIndex(),
               postcssFocus(),
               postcssSize(),
               postcssEasings(),
-              postcssBrandColors()
+              postcssBrandColors(),
+              postcssPalette(PALETTECOLOR)
         ];
 
     return gulp.src(target.main_stylus_src)
         .pipe(plumber())
         .pipe(sourcemaps.init())
         .pipe(stylus({
-            use:[rupture()]
+            use:[
+            rupture(),
+            typographic()
+            ]
         }))
         .pipe(postcss(processors))
         .pipe(cmq({

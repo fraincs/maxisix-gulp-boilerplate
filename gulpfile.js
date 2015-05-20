@@ -111,10 +111,10 @@ STYLUS TASK
 gulp.task('styles', function() {
     return gulp.src(target.main_stylus_src)
         .pipe(plumber())
+        .pipe(sourcemaps.init())
         .pipe(stylus({
             use:[rupture()]
         }))
-        .pipe(sourcemaps.init())
         .pipe(postcss([
           lost(),
           autoprefixer(),
@@ -123,7 +123,7 @@ gulp.task('styles', function() {
           postcssSize(),
           postcssBrandColors()
         ]))
-        .pipe(sourcemaps.write('./'))
+        .pipe(sourcemaps.write())
         .pipe(cmq({
             log: true
         }))
